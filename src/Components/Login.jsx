@@ -1,9 +1,8 @@
-
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { client } from "../api/index";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { loginUser } from "../redux/slices/authSlice";
+import { Outlet, useNavigate } from "react-router-dom";
 import "./Style.css";
 
 export default function Login(){
@@ -18,21 +17,18 @@ export default function Login(){
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!username || !password) {
-      setMsg("All fields are required.");
-      return;
-    }
+    if (!username || !password) {setMsg("All fields are required.");  return;}
 
     setLoading(true);
-    try {
-      const res = await client.post("/auth/login", { username, password });
-      dispatch(loginUser(res.data));
-      console.log(res.data);
-      // Navigate to dashboard after successful login
-      navigate("/auth");
-    } catch (err) {
-      setMsg(err?.response?.data?.message || "An error occurred.");
-    }
+      try {
+        const res = await client.post("/auth/login", { username, password });
+        dispatch(loginUser(res.data));
+        console.log(res.data);
+        navigate("/auth");
+      } catch (err) {
+        setMsg(err?.response?.data?.message || "An error occurred.");
+      }
+
     setLoading(false);
   };
 
@@ -66,6 +62,8 @@ export default function Login(){
         <div className="text1">Create New account 
             <p onClick={()=>{navigate('/')}} style={{color:"blue"}}>Signin</p> 
         </div>
+
+        <Outlet/>
     </div>
   );
 }
